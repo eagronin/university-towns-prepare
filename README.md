@@ -40,6 +40,18 @@ def get_list_of_university_towns():
     return university_towns
 ```
 
+The first five rows of the resulting data frame are as follows:
+
+```
+     State    RegionName
+0  Alabama        Auburn
+1  Alabama      Florence
+2  Alabama  Jacksonville
+3  Alabama    Livingston
+4  Alabama    Montevallo
+...
+```
+
 ## Processing of the GDP Data
 Because subsequent analysis requires changes in GDP in order to determine the start, the end and the bottom of the recession, the following code creates leads and lags of GDP and then calculates changes in GDP:
 
@@ -56,6 +68,19 @@ def gdp_lead_lag():
     return gdp
 ```
 
+The first five rows of the resulting data frame are as follows:
+
+```
+  Quarter      GDP  Lagged GDP  Change in GDP  Lagged Change in GDP  Lead Change in GDP
+0  2000Q1  12359.1         NaN            NaN                   NaN               233.4
+1  2000Q2  12592.5     12359.1          233.4                   NaN                15.2   
+2  2000Q3  12607.7     12592.5           15.2                 233.4                71.6   
+3  2000Q4  12679.3     12607.7           71.6                  15.2               -36.0   
+4  2001Q1  12643.3     12679.3          -36.0                  71.6                67.0
+...
+```
+
+# Processing of the Housing Data
 Finally, the monthly housing price data needs to be converted to quarters before it is analyzed along with quarterly GDP figures.  The following function averages the monthly prices within each quarter.  The resulting dataframe has columns for 2000Q1 through 2016Q3, and a multi-index in the shape of ["State", "RegionName"].  Then the function below merges housing data with state names using state codes.  This step is necessary in order to subsequently merge the housing data with the university town data, which includes state names but does not include state codes:
 
 ```
@@ -94,6 +119,23 @@ def convert_housing_data_to_quarters():
     x = x.set_index(['State', 'RegionName'])
 
     return x
+```
+
+The first 10 rows and three columns of the resulting data frame are as follows:
+
+```
+                               2000Q1         2000Q2         2000Q3
+State   RegionName                                                 
+Alaska  Anchorage       174633.333333  175266.666667  179566.666667
+        Fairbanks       163200.000000  165033.333333  169300.000000
+        Homer                     NaN            NaN            NaN
+Alabama Birmingham       54033.333333   54400.000000   54966.666667
+        Brookwood        92566.666667   95100.000000   98866.666667
+        Decatur                   NaN            NaN            NaN
+        Duncanville     108100.000000  112033.333333  116133.333333
+        Forestdale       88966.666667   89500.000000   89600.000000
+        Grayson Valley   88100.000000   89366.666667   90033.333333
+...
 ```
 
 Next step:  [Analysis](https://eagronin.github.io/university-towns-analyze/).
