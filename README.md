@@ -1,6 +1,14 @@
-# Prepare data
+# Data Preparation
 
-Convert the university_towns.txt list to a DataFrame of towns and the states they are in. 
+## Overview
+This section describes clearning and processing of the data collected for testing a hypothesis whether university towns have their mean housing prices less effected by recessions.  
+
+The previous step, which describes the process of data acquisition, is described [here](https://eagronin.github.io/university-towns-acquire/).
+
+The next step, which provides analysis of the data, is described [here](https://eagronin.github.io/university-towns-analyze/).
+
+## Data
+The list of university towns includes entries of both university towns and states in which these towns are located in a single column.  In order to Convert the university_towns.txt list to a DataFrame of towns and the states they are in. 
 The format of the DataFrame is: DataFrame( [ ["Michigan", "Ann Arbor"], ["Michigan", "Yipsilanti"] ], 
 columns=["State", "RegionName"]  )
 
@@ -88,3 +96,5 @@ def convert_housing_data_to_quarters():
 
     return x
 ```
+
+Next step:  [Analysis](https://eagronin.github.io/university-towns-analyze/).
