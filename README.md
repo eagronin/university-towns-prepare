@@ -7,18 +7,17 @@ The previous step, which describes the process of data acquisition, is described
 
 The next step, which provides analysis of the data, is described [here](https://eagronin.github.io/university-towns-analyze/).
 
-## Data
-The list of university towns includes entries of both university towns and states in which these towns are located in a single column.  In order to Convert the university_towns.txt list to a DataFrame of towns and the states they are in. 
-The format of the DataFrame is: DataFrame( [ ["Michigan", "Ann Arbor"], ["Michigan", "Yipsilanti"] ], 
-columns=["State", "RegionName"]  )
+## Cleaning and Processing of the University Town Data
+The list of university towns includes entries of both university towns and states in which these towns are located in a single column.  State names should be removed from that column and then added as a second column to a data frame with two columns corresponding to university towns and states they are in. The format of the DataFrame is: DataFrame( [ ["Michigan", "Ann Arbor"], ["Michigan", "Yipsilanti"] ], columns=["State", "RegionName"]  )
 
-The following cleaning has been done:
+In addition to this converstion, certain characters and portions of the text need to be removed.  Specifically:
 
 1. For "State", removing characters from "[" to the end.
 2. For "RegionName", when applicable, removing every character from either "[" or " (" or ":" to the end.
-3. Note: certain rows in the data represent universities and not towns. However, those rows will get dropped
-   after merging with housing price data. 
-   
+3. Finally, it is important to note that certain rows in the data represent universities and not towns.  Those rows will be subsequently dropped when merging the university town data with housing price data. 
+
+The following function performs the conversion described above, and then uses regular expressions to identify and remove the redundant text patterns.
+
 ```
 def get_list_of_university_towns():
     university_towns = load_university_town_data()
@@ -41,7 +40,8 @@ def get_list_of_university_towns():
     return university_towns
 ```
 
-Create leads and lags of GDP for determining changes in GDP
+## Processing of the GDP Data
+Because subsequent analysis requires changes in GDP in order to determine the start, the end and the bottom of the recession, the following code creates leads and lags of GDP and then calculates changes in GDP:
 
 ```
 def gdp_lead_lag():
@@ -56,8 +56,7 @@ def gdp_lead_lag():
     return gdp
 ```
 
-Convert the housing data to quarters and return it as mean values in a dataframe. 
-This dataframe has columns for 2000Q1 through 2016Q3, and a multi-index in the shape of ["State", "RegionName"].
+Finally, the monthly housing price data needs to be converted to quarters before it is analyzed along with quarterly GDP figures.  The following function averages the monthly prices within each quarter.  The resulting dataframe has columns for 2000Q1 through 2016Q3, and a multi-index in the shape of ["State", "RegionName"].  Then the function below merges housing data with state names using state codes.  This step is necessary in order to subsequently merge the housing data with the university town data, which includes state names but does not include state codes:
 
 ```
 def convert_housing_data_to_quarters():
@@ -85,7 +84,7 @@ def convert_housing_data_to_quarters():
     x = x.reset_index()
     x.rename(columns = {'State': 'Code'}, inplace = True)
 
-    # Merge university towns and state codes
+    # Merge housing data with state names using state codes
     st_codes = pd.DataFrame.from_dict(states, orient = 'index')
     st_codes = st_codes.reset_index()
     st_codes.columns = ['Code', 'State']
