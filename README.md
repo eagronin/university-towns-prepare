@@ -33,7 +33,9 @@ def get_list_of_university_towns():
     return university_towns
 ```
 
-# Create leads and lags of GDP for determining changes in GDP
+Create leads and lags of GDP for determining changes in GDP
+
+```
 def gdp_lead_lag():
     gdp = load_gdp_data()
     gdp['Lagged GDP'] = np.nan
@@ -44,10 +46,12 @@ def gdp_lead_lag():
     gdp['Lead Change in GDP'] = np.nan
     gdp['Lead Change in GDP'][0:-1] = gdp['Change in GDP'][1:]
     return gdp
+```
 
+Convert the housing data to quarters and return it as mean values in a dataframe. 
+This dataframe has columns for 2000Q1 through 2016Q3, and a multi-index in the shape of ["State", "RegionName"].
 
-# Convert the housing data to quarters and return it as mean values in a dataframe. 
-# This dataframe has columns for 2000Q1 through 2016Q3, and a multi-index in the shape of ["State", "RegionName"].
+```
 def convert_housing_data_to_quarters():
     #print(housing_data.shape)
     housing_data = load_housing_data()
@@ -83,3 +87,4 @@ def convert_housing_data_to_quarters():
     x = x.set_index(['State', 'RegionName'])
 
     return x
+```
