@@ -18,7 +18,7 @@ In addition to this converstion, certain characters and portions of the text nee
 
 The following function performs the conversion described above, and then uses regular expressions to identify and remove the redundant text patterns.
 
-```
+```python
 def get_list_of_university_towns():
     university_towns = load_university_town_data()
     university_towns['State'] = np.nan
@@ -55,7 +55,7 @@ The first five rows of the resulting data frame are as follows:
 ## Processing of the GDP Data
 Because subsequent analysis requires changes in GDP in order to determine the start, the end and the bottom of the recession, the following code creates leads and lags of GDP and then calculates changes in GDP:
 
-```
+```python
 def gdp_lead_lag():
     gdp = load_gdp_data()
     gdp['Lagged GDP'] = np.nan
@@ -83,7 +83,7 @@ The first five rows of the resulting data frame are as follows:
 # Processing of the Housing Data
 Finally, the monthly housing price data needs to be converted to quarters before it is analyzed along with quarterly GDP figures.  The following function averages the monthly prices within each quarter.  The resulting dataframe has columns for 2000Q1 through 2016Q3, and a multi-index in the shape of ["State", "RegionName"].  Then the function below merges housing data with state names using state codes.  This step is necessary in order to subsequently merge the housing data with the university town data, which includes state names but does not include state codes:
 
-```
+```python
 def convert_housing_data_to_quarters():
     #print(housing_data.shape)
     housing_data = load_housing_data()
