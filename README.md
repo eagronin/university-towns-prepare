@@ -20,7 +20,10 @@ The following function performs the conversion described above, and then uses re
 
 ```python
 def get_list_of_university_towns():
+    
     university_towns = load_university_town_data()
+    
+    # Create two columns corresponding to university towns and states they are in
     university_towns['State'] = np.nan
     for town in university_towns['RegionName']:
         if re.search('(\[edit\])', town): 
@@ -28,16 +31,22 @@ def get_list_of_university_towns():
     university_towns['State'] = university_towns['State'].fillna(method = 'ffill')
     university_towns = university_towns[university_towns.RegionName != university_towns.State]
     university_towns = university_towns.reset_index(drop = True)
+    
+    # Remove redundant text
     for town in university_towns.RegionName:
         town_edited = re.sub('([\(\[:].*)', '', town).rstrip()
-        #town_edited = re.sub('(\[.*)', '', town_edited).rstrip()
         university_towns.RegionName[university_towns.RegionName == town] = town_edited
+    
     for state in university_towns.State:
         state_edited = re.sub('(\[.*)', '', state).rstrip()
         university_towns.State[university_towns.State == state] = state_edited
         names = ['State', 'RegionName']
         university_towns = university_towns[names]
+    
     return university_towns
+
+print(get_list_of_university_towns().head(5))
+
 ```
 
 The first five rows of the resulting data frame are as follows:
@@ -57,15 +66,26 @@ Because subsequent analysis requires changes in GDP in order to determine the st
 
 ```python
 def gdp_lead_lag():
+    
     gdp = load_gdp_data()
+    
+    # Create lagged GDP and quarterly change in GDP
     gdp['Lagged GDP'] = np.nan
     gdp['Lagged GDP'][1:] = gdp.GDP[0:-1]
     gdp['Change in GDP'] = gdp.GDP - gdp['Lagged GDP']
+    
+    # Create lagged change in GDP
     gdp['Lagged Change in GDP'] = np.nan
     gdp['Lagged Change in GDP'][1:] = gdp['Change in GDP'][0:-1]
+    
+    # Create lead change in GDP
     gdp['Lead Change in GDP'] = np.nan
     gdp['Lead Change in GDP'][0:-1] = gdp['Change in GDP'][1:]
+    
     return gdp
+
+print(gdp_lead_lag().head(5))
+
 ```
 
 The first five rows of the resulting data frame are as follows:
@@ -85,10 +105,13 @@ Finally, the monthly housing price data needs to be converted to quarters before
 
 ```python
 def convert_housing_data_to_quarters():
-    #print(housing_data.shape)
+
     housing_data = load_housing_data()
+    
+    # Remove duplicate samples
     x = housing_data.drop_duplicates(subset = 'RegionID', keep = 'first')
-    #print(x.shape)    
+    
+    # Reshape long
     housing_data = housing_data.set_index(['State', 'RegionName', 'RegionID'], drop = True) 
     housing_data.columns.name = 'Month'
     x = housing_data.stack()
@@ -97,11 +120,16 @@ def convert_housing_data_to_quarters():
     x.Month = pd.to_datetime(x.Month)
     x['Year'] = x.Month.dt.year
     x['Quarter'] = x.Month.dt.quarter
+    
+    # Average monthly prices within each quarter
     x = x.groupby(['State', 'RegionName', 'RegionID', 'Year', 'Quarter'],).mean()['Value']
     x = x.reset_index()
-    #print(x.dtypes)
     x['Date'] = x.Year.apply(str) + 'Q' + x.Quarter.apply(str)
+    
+    # Drop samples prior to 2000Q1
     x = x[(x.Year >= 2000)]
+    
+    # Reshape wide
     x = x.drop(['Year', 'Quarter'], axis = 1)
     x = x.set_index(['State', 'RegionName', 'RegionID', 'Date'])
     x = x['Value']
@@ -109,7 +137,7 @@ def convert_housing_data_to_quarters():
     x = x.reset_index()
     x.rename(columns = {'State': 'Code'}, inplace = True)
 
-    # Merge housing data with state names using state codes
+    # Merge housing data with state names using state codes and drop state codes
     st_codes = pd.DataFrame.from_dict(states, orient = 'index')
     st_codes = st_codes.reset_index()
     st_codes.columns = ['Code', 'State']
@@ -119,6 +147,8 @@ def convert_housing_data_to_quarters():
     x = x.set_index(['State', 'RegionName'])
 
     return x
+
+print(convert_housing_data_to_quarters().iloc[0:9, 0:3])
 ```
 
 The first 10 rows and three columns of the resulting data frame are as follows:
