@@ -1,22 +1,22 @@
 # Data Preparation
 
 ## Overview
-This section describes clearning and processing of the data collected for testing a hypothesis whether university towns have their mean housing prices less effected by recessions.  
+This section describes clearning and processing of the data collected for testing a hypothesis whether university towns have their housing prices less effected by recessions.  
 
-The previous step, which describes the process of data acquisition, is described [here](https://eagronin.github.io/university-towns-acquire/).
+Data acquisition is described in the [previous section](https://eagronin.github.io/university-towns-acquire/).
 
-The next step, which provides analysis of the data, is described [here](https://eagronin.github.io/university-towns-analyze/).
+Analysis of the data is described in the [next section](https://eagronin.github.io/university-towns-analyze/).
 
 ## Cleaning and Processing of the University Town Data
-The list of university towns includes entries of both university towns and states in which these towns are located in a single column.  State names should be removed from that column and then added as a second column to a data frame with two columns corresponding to university towns and states they are in. The format of the DataFrame is: DataFrame( [ ["Michigan", "Ann Arbor"], ["Michigan", "Yipsilanti"] ], columns=["State", "RegionName"]  )
+The list of university towns includes entries of both university towns and states in which these towns are located in a single column.  State names should be removed from that column and then added as the second column to a data frame with two columns corresponding to university towns and states they are in. The format of the DataFrame is: DataFrame( [ ["Michigan", "Ann Arbor"], ["Michigan", "Yipsilanti"] ], columns=["State", "RegionName"]  )
 
-In addition to this converstion, certain characters and portions of the text need to be removed.  Specifically:
+In addition to this transformation, certain characters and portions of the text need to be removed.  Specifically:
 
 1. For "State", removing characters from "[" to the end.
 2. For "RegionName", when applicable, removing every character from either "[" or " (" or ":" to the end.
 3. Finally, it is important to note that certain rows in the data represent universities and not towns.  Those rows will be subsequently dropped when merging the university town data with housing price data. 
 
-The following function performs the conversion described above, and then uses regular expressions to identify and remove the redundant text patterns.
+The following function performs the transformation described above, and then uses regular expressions to identify and remove the redundant text patterns.
 
 ```python
 def get_list_of_university_towns():
@@ -62,7 +62,7 @@ The first five rows of the resulting data frame are as follows:
 ```
 
 ## Processing of the GDP Data
-Because subsequent analysis requires changes in GDP in order to determine the start, the end and the bottom of the recession, the following code creates leads and lags of GDP and then calculates changes in GDP:
+Because subsequent analysis requires changes in GDP in order to determine the start, the end and the bottom of a recession, the following code creates leads and lags of GDP and then calculates changes in GDP:
 
 ```python
 def gdp_lead_lag():
@@ -101,7 +101,7 @@ The first five rows of the resulting data frame are as follows:
 ```
 
 # Processing of the Housing Data
-Finally, the monthly housing price data needs to be converted to quarters before it is analyzed along with quarterly GDP figures.  The following function averages the monthly prices within each quarter.  The resulting dataframe has columns for 2000Q1 through 2016Q3, and a multi-index in the shape of ["State", "RegionName"].  Then the function below merges housing data with state names using state codes.  This step is necessary in order to subsequently merge the housing data with the university town data, which includes state names but does not include state codes:
+Finally, the monthly housing price data needs to be converted to quarters before it is analyzed along with quarterly GDP figures.  The following function averages the monthly prices within each quarter.  The resulting data frame has columns for 2000Q1 through 2016Q3, and a multi-index in the shape of ["State", "RegionName"].  Then the function below merges housing data with state names using state codes.  This step is necessary in order to subsequently merge the housing data with the university town data, which include state names but do not include state codes:
 
 ```python
 def convert_housing_data_to_quarters():
