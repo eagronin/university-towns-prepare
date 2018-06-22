@@ -100,7 +100,7 @@ The first five rows of the resulting data frame are as follows:
 ...
 ```
 
-# Processing of the Housing Data
+## Processing of the Housing Data
 Finally, the monthly housing price data needs to be converted to quarters before it is analyzed along with quarterly GDP figures.  The following function averages the monthly prices within each quarter.  The resulting data frame has columns for 2000Q1 through 2016Q3, and a multi-index in the shape of ["State", "RegionName"].  Then the function below merges housing data with state names using state codes.  This step is necessary in order to subsequently merge the housing data with the university town data, which include state names but do not include state codes:
 
 ```python
