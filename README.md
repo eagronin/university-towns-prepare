@@ -7,6 +7,10 @@ Data acquisition is described in the [previous section](https://eagronin.github.
 
 Analysis of the data is described in the [next section](https://eagronin.github.io/university-towns-analyze/).
 
+This project is based on assignments from Introduction to Data Science in Python by University of Michigan on Coursera
+
+The analysis for this project was performed in Python.
+
 ## Cleaning and Processing of the University Town Data
 The list of university towns includes entries of both university towns and states in which these towns are located in a single column.  State names should be removed from that column and then added as the second column to a data frame with two columns corresponding to university towns and states they are in. The format of the DataFrame is: DataFrame( [ ["Michigan", "Ann Arbor"], ["Michigan", "Yipsilanti"] ], columns=["State", "RegionName"]  )
 
