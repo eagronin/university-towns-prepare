@@ -1,7 +1,7 @@
 # Data Preparation
 
 ## Overview
-This section describes clearning and processing of the data collected for testing a hypothesis whether university towns have their housing prices less effected by recessions.  
+This section describes clearing and processing of the data collected for testing a hypothesis whether university towns have their housing prices less effected by recessions.  
 
 Data acquisition is described in the [previous section](https://eagronin.github.io/university-towns-acquire/).
 
